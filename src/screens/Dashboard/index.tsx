@@ -2,11 +2,17 @@ import React from 'react';
 import {StyleSheet, Text, View, SectionList} from 'react-native';
 import {useHookstate} from '@hookstate/core';
 import {Button} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import {DrawerScreenProps} from '@react-navigation/drawer';
 
 import {store} from '../../store';
 import {GapView} from '../../components';
+import {ParamList} from '../../types';
+
+type DashboardNavigationProps = DrawerScreenProps<ParamList, 'Dashboard'>;
 
 export default function Dashboard() {
+  const navigation = useNavigation<DashboardNavigationProps['navigation']>();
   const category = useHookstate(store.category);
   const DATA = [
     {
@@ -48,7 +54,7 @@ export default function Dashboard() {
               icon="plus"
               mode="contained"
               style={{borderRadius: 5}}
-              onPress={() => console.log('Pressed')}>
+              onPress={() => navigation.navigate('Manage Category')}>
               Add Category
             </Button>
           </View>

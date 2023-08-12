@@ -4,30 +4,26 @@ type Store = {
   category: Category[];
 };
 
-type Category = {
+export type Category = {
+  id: string;
   name: string;
   fields: Field[];
   machines?: Machine[];
-  titleField?: Field;
 };
 
-type Field = {
-  text?: string;
-  date?: Date;
-  checkbox?: boolean;
-  number?: number;
+export type Field = {
+  name?: string;
+  value?: string | boolean;
+  type: FieldType;
 };
 
-type Machine = {
-  titleField?: string;
-  fields?: Field[];
+export type Machine = {
+  name: string;
+  fields: Field[];
 };
+
+export type FieldType = 'Text' | 'Date' | 'Checkbox' | 'Number';
 
 export const store = hookstate<Store>({
-  category: [
-    {
-      name: 'Buldozer',
-      fields: [{text: 'hello'}],
-    },
-  ],
+  category: [],
 });
