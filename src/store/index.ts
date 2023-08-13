@@ -13,7 +13,7 @@ export type Category = {
 
 export type Field = {
   name?: string;
-  value?: string | boolean;
+  value?: string | boolean | Date;
   type: FieldType;
 };
 
