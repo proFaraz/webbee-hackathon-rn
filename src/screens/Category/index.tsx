@@ -14,13 +14,11 @@ type Props = DrawerScreenProps<ParamList, string>;
 export default function CategoryScreen() {
   const allCategories = useHookstate(store.category);
   const {params} = useRoute<Props['route']>();
-  console.log('route', JSON.stringify(params));
+  // console.log('route', JSON.stringify(params));
 
   const addNewItem = () => {
     allCategories[params?.index!].set(cats => {
-      const selectedCategory = cats[params?.index!];
-
-      const newFields = selectedCategory.fields.map((attribute: Field) => ({
+      const newFields = cats.fields.map((attribute: Field) => ({
         name: attribute.name,
         value: '',
         type: attribute.type,
@@ -95,7 +93,8 @@ const renderTypeFields = (item: Field, index: number) => {
     //   allCategories[]
     // }
   };
-
+  console.log("item", item);
+  
   if (item.type == 'Text') {
     return (
       <Card.Content>
