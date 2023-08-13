@@ -16,15 +16,17 @@ export default function ManageCategory() {
   }, []);
 
   const addNewCategory = () => {
-    allCategories.set(category => [
-      ...category,
-      {
-        id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-        name: 'New Category',
-        fields: [{name: '', value: '', type: 'Text'}],
-        machines: [],
-      },
-    ]);
+    allCategories.set(category => {
+      return [
+        ...category,
+        {
+          id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+          name: 'New Category',
+          fields: [{name: '', value: '', type: 'Text'}],
+          machines: [],
+        },
+      ];
+    });
   };
 
   return (

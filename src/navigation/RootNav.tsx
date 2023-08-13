@@ -55,8 +55,12 @@ export default function RootNav() {
             return (
               <Drawer.Screen
                 key={item.id}
-                name={Boolean(item?.name) ? item?.name : 'invalid name' + index}
+                name={item.id}
                 component={Category}
+                options={{
+                  drawerLabel: item.name,
+                  headerTitle: item.name,
+                }}
                 initialParams={{item, index}}
               />
             );
