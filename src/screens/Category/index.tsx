@@ -10,7 +10,7 @@ import DateTimePicker, {
 
 import {ParamList} from '../../types';
 import {GapView} from '../../components';
-import {Field, FieldType, Machine, store} from '../../store';
+import {Field, Machine, store} from '../../store';
 
 type Props = DrawerScreenProps<ParamList, string>;
 
@@ -62,7 +62,6 @@ export default function CategoryScreen() {
           <Item item={item} index={index} catIndex={params?.index!} />
         )}
         ItemSeparatorComponent={() => <GapView />}
-        // keyExtractor={item => item.id}
         ListEmptyComponent={() => (
           <View style={styles.center}>
             <Text>No Categories to Display</Text>

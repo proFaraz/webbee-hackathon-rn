@@ -1,4 +1,5 @@
 import {ImmutableObject} from '@hookstate/core';
+
 import {Category} from '../store';
 
 export type ParamList = {

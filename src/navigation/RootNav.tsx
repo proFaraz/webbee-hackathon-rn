@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {useHookstate} from '@hookstate/core';
 import {
   NavigationContainer,
@@ -8,11 +8,10 @@ import {
 } from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {PaperProvider, DefaultTheme as DTheme} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {Category, Dashboard, ManageCategory} from '../screens';
 import {store} from '../store';
-import {ParamList} from '../types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyTheme: Theme = {
   ...DefaultTheme,
@@ -32,22 +31,20 @@ export default function RootNav() {
   const category = useHookstate(store.category);
 
   useEffect(() => {
-    console.log("useEffect setItem", category.get()?.length);
-    if(category.get()?.length > 0) {
-      AsyncStorage.setItem('items', JSON.stringify(category.get()))
+    console.log('useEffect setItem', category.get()?.length);
+    if (category.get()?.length > 0) {
+      AsyncStorage.setItem('items', JSON.stringify(category.get()));
     }
-  }, [category.get()]) 
+  }, [category.get()]);
 
   useEffect(() => {
-    
-    AsyncStorage.getItem('items')
-    .then((res) => {
-      console.log("useEffect getItem", res);
-      if(res) {
-        category.set(JSON.parse(res))
+    AsyncStorage.getItem('items').then(res => {
+      console.log('useEffect getItem', res);
+      if (res) {
+        category.set(JSON.parse(res));
       }
-    })
-  }, [])
+    });
+  }, []);
 
   function MyDrawer() {
     return (
@@ -58,7 +55,7 @@ export default function RootNav() {
             return (
               <Drawer.Screen
                 key={item.id}
-                name={Boolean(item?.name) ? item?.name : "invalid name" + index}
+                name={Boolean(item?.name) ? item?.name : 'invalid name' + index}
                 component={Category}
                 initialParams={{item, index}}
               />

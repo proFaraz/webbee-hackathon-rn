@@ -217,7 +217,6 @@ const renderTypeFields = (
           value={!item.value ? '' : (item.value?.toString() as string)}
           onFocus={() => setShowPicker(true)}
           mode="outlined"
-          // onChangeText={text => updateValue(item.type, index, text)}
         />
       </Card.Content>
     );
