@@ -17,49 +17,26 @@ type Props = DrawerScreenProps<ParamList, string>;
 export default function CategoryScreen() {
   const allCategories = useHookstate(store.category);
   const {params} = useRoute<Props['route']>();
-  console.log('route', JSON.stringify(params));
 
   const addNewItem = () => {
-    allCategories.set(category => {
-      const cat = [...category];
-      cat[params?.index!].machines?.push({
+    allCategories[params?.index!].set(cats => {
+      const newFields = cats.fields.map((attribute: Field) => ({
+        name: attribute.name,
+        value: '',
+        type: attribute.type,
+      }));
+
+      const newMachine = {
         name: '',
-        fields: cat[params?.index!].fields,
-      });
-      return cat;
+        fields: newFields,
+      };
+
+      const newMachines = [...(cats.machines || []), newMachine];
+
+      return {...cats, machines: newMachines};
     });
   };
 
-  const updateField = (value: string, catIndex: number, fieldIndex: number) => {
-    allCategories[catIndex].fields.set(prevFields => {
-      const newFields = prevFields.map((field, index) => {
-        if (index === fieldIndex) {
-          return {...field, name: value};
-        }
-        return field;
-      });
-      return newFields;
-    });
-  };
-
-  const DATA = [
-    {
-      name: '',
-      fields: [
-        {name: 'Model', value: '', type: 'Number'},
-        {name: 'Model', value: '', type: 'Date'},
-        {name: 'Model', value: '', type: 'Checkbox'},
-      ],
-    },
-    // {
-    //   name: '',
-    //   fields: [{name: 'Model', value: '', type: 'Checkbox'}],
-    // },
-    // {
-    //   name: '',
-    //   fields: [{name: 'Model', value: '', type: 'Checkbox'}],
-    // },
-  ];
 
   return (
     <View style={styles.container}>
@@ -106,25 +83,16 @@ const renderTypeFields = (
   const allCategories = useHookstate(store.category);
   const [showPicker, setShowPicker] = useState(false);
 
-  const updateValue = (
-    type: FieldType,
+  const updateField = (
     index: number,
-    value?: string | boolean,
+    index2: number,
+    catIndex: number,
+    value: string | boolean,
   ) => {
-    // if (type != 'Checkbox') {
-    //   allCategories[]
-    // }
-  };
-
-  const updateField = (value: string, catIndex: number, fieldIndex: number) => {
-    allCategories[catIndex].fields.set(prevFields => {
-      const newFields = prevFields.map((field, index) => {
-        if (index === fieldIndex) {
-          return {...field, name: value};
-        }
-        return field;
-      });
-      return newFields;
+    allCategories[catIndex].machines.set(prevFields => {
+      const temp = [...prevFields!];
+      temp[index].fields[index2].value = value;
+      return temp;
     });
   };
 
@@ -152,7 +120,7 @@ const renderTypeFields = (
           label={item.name}
           value={item.value as string}
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          onChangeText={text => updateField(index, index2, catIndex, text)}
         />
       </Card.Content>
     );
@@ -162,7 +130,9 @@ const renderTypeFields = (
       <Card.Content>
         {showPicker && (
           <DateTimePicker
-            value={item.value as Date}
+            value={
+              item.value ? new Date(item.value as string) : (new Date() as Date)
+            }
             mode="date" // You can set 'date', 'time', or 'datetime'
             onChange={(event, date) =>
               handleDateChange(event, item.value, index, index2, catIndex, date)
@@ -171,10 +141,10 @@ const renderTypeFields = (
         )}
         <TextInput
           label={item.name}
-          value={item.value as string}
+          value={!item.value ? '' : (item.value?.toString() as string)}
           onFocus={() => setShowPicker(true)}
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          // onChangeText={text => updateValue(item.type, index, text)}
         />
       </Card.Content>
     );
@@ -187,7 +157,7 @@ const renderTypeFields = (
           value={item.value as string}
           keyboardType="number-pad"
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          onChangeText={text => updateField(index, index2, catIndex, text)}
         />
       </Card.Content>
     );
@@ -198,7 +168,7 @@ const renderTypeFields = (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Switch
             value={item.value as boolean}
-            onValueChange={value => updateValue(item.type, index, value)}
+            onValueChange={value => updateField(index, index2, catIndex, value)}
           />
           <Text>{item.name}</Text>
         </View>

@@ -39,7 +39,7 @@ export default function RootNav() {
             return (
               <Drawer.Screen
                 key={item.id}
-                name={item.name}
+                name={Boolean(item?.name) ? item?.name : "invalid name" + index}
                 component={Category}
                 initialParams={{item, index}}
               />
