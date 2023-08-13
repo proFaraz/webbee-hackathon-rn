@@ -13,7 +13,8 @@ type DashboardNavigationProps = DrawerScreenProps<ParamList, 'Dashboard'>;
 
 export default function Dashboard() {
   const navigation = useNavigation<DashboardNavigationProps['navigation']>();
-  const category = useHookstate(store.category);
+  const allCategories = useHookstate(store.category);
+  console.log('cats', allCategories);
   const DATA = [
     {
       title: 'Main dishes',
