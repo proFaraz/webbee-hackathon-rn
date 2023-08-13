@@ -37,7 +37,6 @@ export default function CategoryScreen() {
     });
   };
 
-
   return (
     <View style={styles.container}>
       <View
@@ -92,6 +91,7 @@ const renderTypeFields = (
     allCategories[catIndex].machines.set(prevFields => {
       const temp = [...prevFields!];
       temp[index].fields[index2].value = value;
+      temp[index].name = temp[index].fields[0].value as string;
       return temp;
     });
   };

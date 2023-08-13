@@ -19,61 +19,82 @@ export default function Dashboard() {
   const allCategories = useHookstate(store.category);
   console.log('cats', allCategories);
 
+  const addNewItem = (index: number) => {
+    allCategories[index].set(cats => {
+      const newFields = cats.fields.map((attribute: Field) => ({
+        name: attribute.name,
+        value: '',
+        type: attribute.type,
+      }));
+
+      const newMachine = {
+        name: '',
+        fields: newFields,
+      };
+
+      const newMachines = [...(cats.machines || []), newMachine];
+
+      return {...cats, machines: newMachines};
+    });
+  };
+
+  const data = [
+    {
+      id: '1691913265577-1471',
+      name: 'New Tes',
+      fields: [
+        {name: 'key1', value: '', type: 'Text'},
+        {name: 'key 2', value: '', type: 'Date'},
+        {name: 'key 3', value: '', type: 'Checkbox'},
+        {name: 'key 4', value: '', type: 'Number'},
+      ],
+      machines: [
+        {
+          name: '',
+          fields: [
+            {name: 'key1', value: 'test 1', type: 'Text'},
+            {
+              name: 'key 2',
+              value: '2023-08-15T07:55:24.362Z',
+              type: 'Date',
+            },
+            {name: 'key 3', value: true, type: 'Checkbox'},
+            {name: 'key 4', value: '500', type: 'Number'},
+          ],
+        },
+      ],
+    },
+    {
+      id: '1691913265577-1472',
+      name: 'New Te1',
+      fields: [
+        {name: 'key1', value: '', type: 'Text'},
+        {name: 'key 2', value: '', type: 'Date'},
+        {name: 'key 3', value: '', type: 'Checkbox'},
+        {name: 'key 4', value: '', type: 'Number'},
+      ],
+      machines: [
+        {
+          name: '',
+          fields: [
+            {name: 'key1', value: 'test 1', type: 'Text'},
+            {
+              name: 'key 2',
+              value: '2023-08-15T07:55:24.362Z',
+              type: 'Date',
+            },
+            {name: 'key 3', value: true, type: 'Checkbox'},
+            {name: 'key 4', value: '500', type: 'Number'},
+          ],
+        },
+      ],
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={[
-          {
-            id: '1691913265577-1471',
-            name: 'New Tes',
-            fields: [
-              {name: 'key1', value: '', type: 'Text'},
-              {name: 'key 2', value: '', type: 'Date'},
-              {name: 'key 3', value: '', type: 'Checkbox'},
-              {name: 'key 4', value: '', type: 'Number'},
-            ],
-            machines: [
-              {
-                name: '',
-                fields: [
-                  {name: 'key1', value: 'test 1', type: 'Text'},
-                  {
-                    name: 'key 2',
-                    value: '2023-08-15T07:55:24.362Z',
-                    type: 'Date',
-                  },
-                  {name: 'key 3', value: true, type: 'Checkbox'},
-                  {name: 'key 4', value: '500', type: 'Number'},
-                ],
-              },
-            ],
-          },
-          {
-            id: '1691913265577-1472',
-            name: 'New Te1',
-            fields: [
-              {name: 'key1', value: '', type: 'Text'},
-              {name: 'key 2', value: '', type: 'Date'},
-              {name: 'key 3', value: '', type: 'Checkbox'},
-              {name: 'key 4', value: '', type: 'Number'},
-            ],
-            machines: [
-              {
-                name: '',
-                fields: [
-                  {name: 'key1', value: 'test 1', type: 'Text'},
-                  {
-                    name: 'key 2',
-                    value: '2023-08-15T07:55:24.362Z',
-                    type: 'Date',
-                  },
-                  {name: 'key 3', value: true, type: 'Checkbox'},
-                  {name: 'key 4', value: '500', type: 'Number'},
-                ],
-              },
-            ],
-          },
-        ]}
+        data={allCategories.get()}
         ItemSeparatorComponent={() => <GapView />}
         contentContainerStyle={{flexGrow: 1}}
         keyExtractor={(item, index) => item.id}
@@ -86,19 +107,24 @@ export default function Dashboard() {
                 alignItems: 'center',
               }}>
               <Text style={styles.title}>{item.name}</Text>
-              <Button mode="contained" style={{borderRadius: 5}}>
+              <Button
+                mode="contained"
+                style={{borderRadius: 5}}
+                onPress={() => addNewItem(index)}>
                 Add New Item
               </Button>
             </View>
             <GapView />
             <Divider />
             <GapView />
-            {item.machines?.length > 0 ? (
+            {item?.machines?.length! > 0 ? (
               item.machines?.map((mach, machIndex) => {
                 return <Item item={mach} catIndex={index} index={machIndex} />;
               })
             ) : (
-              <Text>No items to Display</Text>
+              <View style={{alignItems: 'center'}}>
+                <Text>No items to Display</Text>
+              </View>
             )}
           </View>
         )}
@@ -120,51 +146,6 @@ export default function Dashboard() {
   );
 }
 
-const Item = ({
-  item,
-  index,
-  catIndex,
-}: {
-  item: ImmutableObject<Machine>;
-  index: number;
-  catIndex: number;
-}) => {
-  const allCategories = useHookstate(store.category);
-  const {colors} = useTheme();
-
-  const removeItem = (index: number) => {
-    allCategories[catIndex].machines.set(prevFields => {
-      const newFields = [...prevFields!];
-      newFields.splice(index, 1);
-      return newFields;
-    });
-  };
-
-  return (
-    <Card
-      key={index}
-      mode="contained"
-      style={{borderRadius: 2, backgroundColor: colors.card}}>
-      <Card.Title
-        titleStyle={{fontSize: 20}}
-        title={item.name.length > 0 ? item.name : 'Unnamed Field'}
-      />
-      {item.fields.map((item2, index2) => {
-        return renderTypeFields(item2, index, index2, catIndex);
-      })}
-      <Card.Actions>
-        <Button
-          icon="delete"
-          mode="outlined"
-          style={{borderRadius: 5}}
-          onPress={() => removeItem(index)}>
-          Remove
-        </Button>
-      </Card.Actions>
-    </Card>
-  );
-};
-
 const renderTypeFields = (
   item: Field,
   index: number,
@@ -174,25 +155,17 @@ const renderTypeFields = (
   const allCategories = useHookstate(store.category);
   const [showPicker, setShowPicker] = useState(false);
 
-  const updateValue = (
-    type: FieldType,
+  const updateField = (
     index: number,
-    value?: string | boolean,
+    index2: number,
+    catIndex: number,
+    value: string | boolean,
   ) => {
-    // if (type != 'Checkbox') {
-    //   allCategories[]
-    // }
-  };
-
-  const updateField = (value: string, catIndex: number, fieldIndex: number) => {
-    allCategories[catIndex].fields.set(prevFields => {
-      const newFields = prevFields.map((field, index) => {
-        if (index === fieldIndex) {
-          return {...field, name: value};
-        }
-        return field;
-      });
-      return newFields;
+    allCategories[catIndex].machines.set(prevFields => {
+      const temp = [...prevFields!];
+      temp[index].fields[index2].value = value;
+      temp[index].name = temp[index].fields[0].value as string;
+      return temp;
     });
   };
 
@@ -220,7 +193,7 @@ const renderTypeFields = (
           label={item.name}
           value={item.value as string}
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          onChangeText={text => updateField(index, index2, catIndex, text)}
         />
       </Card.Content>
     );
@@ -230,7 +203,9 @@ const renderTypeFields = (
       <Card.Content>
         {showPicker && (
           <DateTimePicker
-            value={item.value as Date}
+            value={
+              item.value ? new Date(item.value as string) : (new Date() as Date)
+            }
             mode="date" // You can set 'date', 'time', or 'datetime'
             onChange={(event, date) =>
               handleDateChange(event, item.value, index, index2, catIndex, date)
@@ -239,10 +214,10 @@ const renderTypeFields = (
         )}
         <TextInput
           label={item.name}
-          value={item.value as string}
+          value={!item.value ? '' : (item.value?.toString() as string)}
           onFocus={() => setShowPicker(true)}
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          // onChangeText={text => updateValue(item.type, index, text)}
         />
       </Card.Content>
     );
@@ -255,7 +230,7 @@ const renderTypeFields = (
           value={item.value as string}
           keyboardType="number-pad"
           mode="outlined"
-          onChangeText={text => updateValue(item.type, index, text)}
+          onChangeText={text => updateField(index, index2, catIndex, text)}
         />
       </Card.Content>
     );
@@ -266,13 +241,61 @@ const renderTypeFields = (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Switch
             value={item.value as boolean}
-            onValueChange={value => updateValue(item.type, index, value)}
+            onValueChange={value => updateField(index, index2, catIndex, value)}
           />
           <Text>{item.name}</Text>
         </View>
       </Card.Content>
     );
   }
+};
+
+const Item = ({
+  item,
+  index,
+  catIndex,
+}: {
+  item: ImmutableObject<Machine>;
+  index: number;
+  catIndex: number;
+}) => {
+  const allCategories = useHookstate(store.category);
+  const {colors} = useTheme();
+
+  const removeItem = (index: number) => {
+    allCategories[catIndex].machines.set(prevFields => {
+      const newFields = [...prevFields!];
+      newFields.splice(index, 1);
+      return newFields;
+    });
+  };
+
+  return (
+    <>
+      <Card
+        key={index}
+        mode="contained"
+        style={{borderRadius: 2, backgroundColor: colors.card}}>
+        <Card.Title
+          titleStyle={{fontSize: 20}}
+          title={item.name.length > 0 ? item.name : 'Unnamed Field'}
+        />
+        {item.fields.map((item2, index2) => {
+          return renderTypeFields(item2, index, index2, catIndex);
+        })}
+        <Card.Actions>
+          <Button
+            icon="delete"
+            mode="outlined"
+            style={{borderRadius: 5}}
+            onPress={() => removeItem(index)}>
+            Remove
+          </Button>
+        </Card.Actions>
+      </Card>
+      <GapView />
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
