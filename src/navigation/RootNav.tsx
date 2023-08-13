@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useHookstate} from '@hookstate/core';
 import {
@@ -12,6 +12,7 @@ import {PaperProvider, DefaultTheme as DTheme} from 'react-native-paper';
 import {Category, Dashboard, ManageCategory} from '../screens';
 import {store} from '../store';
 import {ParamList} from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyTheme: Theme = {
   ...DefaultTheme,
@@ -29,6 +30,24 @@ const MyTheme: Theme = {
 export default function RootNav() {
   const Drawer = createDrawerNavigator();
   const category = useHookstate(store.category);
+
+  useEffect(() => {
+    console.log("useEffect setItem", category.get()?.length);
+    if(category.get()?.length > 0) {
+      AsyncStorage.setItem('items', JSON.stringify(category.get()))
+    }
+  }, [category.get()]) 
+
+  useEffect(() => {
+    
+    AsyncStorage.getItem('items')
+    .then((res) => {
+      console.log("useEffect getItem", res);
+      if(res) {
+        category.set(JSON.parse(res))
+      }
+    })
+  }, [])
 
   function MyDrawer() {
     return (
