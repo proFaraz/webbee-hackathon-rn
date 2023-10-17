@@ -6,9 +6,10 @@ type Store = {
 
 export type Category = {
   id: string;
-  name: string;
+  name?: string;
   fields: Field[];
   machines?: Machine[];
+  // isEditing?: false | boolean;
 };
 
 export type Field = {

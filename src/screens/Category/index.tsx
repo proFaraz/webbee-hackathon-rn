@@ -113,13 +113,15 @@ const renderTypeFields = (
   };
 
   if (item.type == 'Text') {
+    const [temp, setTemp] = useState(item.value ?? '');
     return (
       <Card.Content>
         <TextInput
           label={item.name}
-          value={item.value as string}
+          value={temp as string}
           mode="outlined"
-          onChangeText={text => updateField(index, index2, catIndex, text)}
+          onChangeText={text => setTemp(text)}
+          onBlur={() => updateField(index, index2, catIndex, temp as string)}
         />
       </Card.Content>
     );
@@ -149,14 +151,16 @@ const renderTypeFields = (
     );
   }
   if (item.type == 'Number') {
+    const [temp, setTemp] = useState(item.value ?? '');
     return (
       <Card.Content>
         <TextInput
           label={item.name}
-          value={item.value as string}
+          value={temp as string}
           keyboardType="number-pad"
           mode="outlined"
-          onChangeText={text => updateField(index, index2, catIndex, text)}
+          onChangeText={text => setTemp(text)}
+          onBlur={() => updateField(index, index2, catIndex, temp as string)}
         />
       </Card.Content>
     );
