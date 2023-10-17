@@ -70,14 +70,6 @@ const Item = ({
   index: number;
   onUpdateCategory?: () => void;
 }) => {
-  const data = [
-    {
-      id: '',
-      name: 'New Category',
-      fields: [{name: '', value: '', type: 'Text'}],
-      machines: [],
-    },
-  ];
   const allCategories = useHookstate(store.category);
 
   const {colors} = useTheme();
@@ -98,7 +90,7 @@ const Item = ({
 
   const updateField = (value: string, catIndex: number, fieldIndex: number) => {
     allCategories[catIndex].fields.set(prevFields => {
-      const newFields = prevFields.map((field, index) => {
+      const newFields = prevFields?.map((field, index) => {
         if (index === fieldIndex) {
           return {...field, name: value};
         }
@@ -122,17 +114,54 @@ const Item = ({
     });
   };
 
-  const removeCategory = (index: number) => {
-    console.log('addfsdvsdvsd');
+  // const removeCategory = (index: number) => {
+  //   console.log('addfsdvsdvsd');
 
-    console.log('deleting: ', allCategories[index].name.value, ' category');
-    allCategories.set(category => {
-      const newCategories = [...category];
-      if (newCategories[index]) {
+  //   console.log('deleting: ', allCategories[index].name.value, ' category');
+  //   allCategories.set(category => {
+  //     const newCategories = [...category];
+  //     if (newCategories[index]) {
+  //       newCategories.splice(index, 1);
+  //     }
+  //     return newCategories;
+  //   });
+  // };
+
+  // const removeCategory = (index: number) => {
+  //   console.log('addfsdvsdvsd');
+
+  //   console.log('deleting: ', allCategories[index].name.value, ' category');
+
+  //   allCategories.set(category => {
+  //     const newCategories = category.filter((_, i) => i !== index);
+  //     return newCategories;
+  //   });
+  // };
+
+  // const removeCategory = (index: number) => {
+  //   console.log('addfsdvsdvsd');
+
+  //   if (allCategories[index]) {
+  //     console.log('deleting: ', allCategories[index].name, ' category');
+
+  //     allCategories.set(state => {
+  //       const newCategories = [...state];
+  //       newCategories.splice(index, 1);
+  //       return newCategories; // Remove the unnecessary property
+  //     });
+  //   }
+  // };
+
+  const removeCategory = (index: number) => {
+    if (index >= 0 && index < allCategories.length) {
+      console.log('Deleting: ', allCategories[index]?.name, ' category');
+
+      allCategories.set(state => {
+        const newCategories = [...state];
         newCategories.splice(index, 1);
-      }
-      return newCategories;
-    });
+        return newCategories;
+      });
+    }
   };
 
   const updateCategory = (catIndex: number, value: string) => {
@@ -163,7 +192,7 @@ const Item = ({
               onChangeText={text => setTitle(text)}
               onBlur={() => updateCategory(index, title)}
             />
-            {item.fields.map((item2, index2) => {
+            {item?.fields?.map((item2, index2) => {
               const [temp, setTemp] = useState(item2.name ?? '');
 
               return (

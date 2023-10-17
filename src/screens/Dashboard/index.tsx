@@ -21,10 +21,10 @@ export default function Dashboard() {
 
   const addNewItem = (index: number) => {
     allCategories[index].set(cats => {
-      const newFields = cats.fields.map((attribute: Field) => ({
-        name: attribute.name,
+      const newFields = cats.fields?.map((attribute: Field) => ({
+        name: attribute?.name,
         value: '',
-        type: attribute.type,
+        type: attribute?.type,
       }));
 
       const newMachine = {
@@ -118,7 +118,7 @@ export default function Dashboard() {
             <Divider />
             <GapView />
             {item?.machines?.length! > 0 ? (
-              item.machines?.map((mach, machIndex) => {
+              item?.machines?.map((mach, machIndex) => {
                 return <Item item={mach} catIndex={index} index={machIndex} />;
               })
             ) : (
@@ -187,13 +187,15 @@ const renderTypeFields = (
   };
 
   if (item.type == 'Text') {
+    const [temp, setTemp] = useState(item.value ?? '');
     return (
       <Card.Content>
         <TextInput
           label={item.name}
           value={item.value as string}
           mode="outlined"
-          onChangeText={text => updateField(index, index2, catIndex, text)}
+          onChangeText={text => setTemp(text)}
+          onBlur={() => updateField(index, index2, catIndex, temp as string)}
         />
       </Card.Content>
     );
@@ -222,6 +224,7 @@ const renderTypeFields = (
     );
   }
   if (item.type == 'Number') {
+    const [temp, setTemp] = useState(item.value ?? '');
     return (
       <Card.Content>
         <TextInput
@@ -229,7 +232,8 @@ const renderTypeFields = (
           value={item.value as string}
           keyboardType="number-pad"
           mode="outlined"
-          onChangeText={text => updateField(index, index2, catIndex, text)}
+          onChangeText={text => setTemp(text)}
+          onBlur={() => updateField(index, index2, catIndex, temp as string)}
         />
       </Card.Content>
     );
@@ -279,7 +283,7 @@ const Item = ({
           titleStyle={{fontSize: 20}}
           title={item.name.length > 0 ? item.name : 'Unnamed Field'}
         />
-        {item.fields.map((item2, index2) => {
+        {item?.fields?.map((item2, index2) => {
           return renderTypeFields(item2, index, index2, catIndex);
         })}
         <Card.Actions>

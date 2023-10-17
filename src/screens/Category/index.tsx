@@ -21,9 +21,9 @@ export default function CategoryScreen() {
   const addNewItem = () => {
     allCategories[params?.index!].set(cats => {
       const newFields = cats.fields.map((attribute: Field) => ({
-        name: attribute.name,
+        name: attribute?.name,
         value: '',
-        type: attribute.type,
+        type: attribute?.type,
       }));
 
       const newMachine = {
@@ -209,7 +209,7 @@ const Item = ({
         titleStyle={{fontSize: 20}}
         title={item.name.length > 0 ? item.name : 'Unnamed Field'}
       />
-      {item.fields.map((item2, index2) => {
+      {item.fields?.map((item2, index2) => {
         return renderTypeFields(item2, index, index2, catIndex);
       })}
       <Card.Actions>
