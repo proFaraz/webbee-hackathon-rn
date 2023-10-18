@@ -147,7 +147,7 @@ const Item = ({
   //     allCategories.set(state => {
   //       const newCategories = [...state];
   //       newCategories.splice(index, 1);
-  //       return newCategories; // Remove the unnecessary property
+  //       return newCategories;
   //     });
   //   }
   // };
@@ -163,6 +163,18 @@ const Item = ({
       });
     }
   };
+  //   const removeCategory = (index: number) => {
+  //   if (index >= 0 && index < allCategories.length) {
+  //     console.log('Deleting: ', allCategories[index]?.value?.name, ' category'); // Use .value to access the Category object
+
+  //     const newCategories = allCategories.value.slice(); // Use .value to access the array and make a shallow copy
+  //     if (newCategories[index]) {
+  //       newCategories.splice(index, 1);
+  //     }
+
+  //     allCategories.set(newCategories);
+  //   }
+  // };
 
   const updateCategory = (catIndex: number, value: string) => {
     allCategories.set(cat => {
