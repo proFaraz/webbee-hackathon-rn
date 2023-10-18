@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
-import {useHookstate, ImmutableObject} from '@hookstate/core';
+import {useHookstate, ImmutableObject, none} from '@hookstate/core';
 import {Button, Card, TextInput, IconButton, Menu} from 'react-native-paper';
 import {useTheme} from '@react-navigation/native';
 
@@ -8,13 +8,10 @@ import {Category, FieldType, store} from '../../store';
 import {GapView} from '../../components';
 
 export default function ManageCategory() {
-  const allCategories = useHookstate(store.category);
+  const allCategories = useHookstate(store?.category);
   const {colors} = useTheme();
 
-  useEffect(() => {
-    console.log('check', allCategories.get());
-  }, []);
-
+  console.log('check1', allCategories.get());
   const addNewCategory = () => {
     allCategories.set(category => {
       return [
@@ -28,15 +25,17 @@ export default function ManageCategory() {
       ];
     });
   };
-
+  function renderItem({item, index}: {item: Category; index: number}) {
+    return <Item item={item} index={index} />;
+  }
   return (
     <View style={styles.container}>
       <FlatList
-        data={allCategories.get()}
+        data={allCategories.get() as Category[]}
         contentContainerStyle={{flexGrow: 1}}
-        renderItem={({item, index}) => <Item item={item} index={index} />}
+        renderItem={renderItem}
         ItemSeparatorComponent={() => <GapView />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item?.id}
         ListEmptyComponent={() => (
           <View style={styles.center}>
             <Text>No Categories to Display</Text>
@@ -103,12 +102,34 @@ const Item = ({
     });
   };
 
-  const removeCategory = (index: number) => {
-    allCategories.set(category => {
-      const newCategories = [...category];
-      newCategories.splice(index, 1);
-      return newCategories;
+  /**
+   *
+   * @param itemID
+   * @description splice option
+   */
+  // const removeCategory = (index: number) => {
+  //   setTimeout(() => allCategories[index].set(none), 5);
+  //   // allCategories.set(category => {
+  //   //   const newCategories = [...category];
+  //   //   newCategories.splice(index, 1);
+  //   //   return newCategories;
+  //   // });
+  // };
+
+  /**
+   *
+   * @param itemID
+   * @description Filter option
+   */
+  const removeCategory2 = async (itemID: string) => {
+    const newCategories = JSON.parse(JSON.stringify(allCategories.get()));
+    const arr = await newCategories.filter((item: Category) => {
+      return item.id !== itemID;
     });
+    allCategories?.set(none);
+    setTimeout(() => {
+      allCategories?.set(arr);
+    }, 0);
   };
 
   const updateCategory = (value: string, catIndex: number) => {
@@ -128,11 +149,11 @@ const Item = ({
       <Card.Content>
         <TextInput
           label="Category Name"
-          value={item.name}
+          value={item?.name}
           mode="outlined"
           onChangeText={text => updateCategory(text, index)}
         />
-        {item.fields.map((item2, index2) => {
+        {item?.fields?.map((item2, index2) => {
           return (
             <View
               key={index2}
@@ -143,12 +164,12 @@ const Item = ({
               <TextInput
                 label="Field"
                 style={{flex: 1}}
-                value={item2.name}
+                value={item2?.name}
                 mode="outlined"
                 onChangeText={text => updateField(text, index, index2)}
               />
               <Button onPress={() => console.log('Pressed')}>
-                {item2.type}
+                {item2?.type}
               </Button>
               <IconButton
                 icon="delete"
@@ -166,8 +187,8 @@ const Item = ({
           style={{borderRadius: 5}}
           onPress={() => console.log('Pressed')}>
           Title Field:{' '}
-          {item.fields[0].name?.length! > 0
-            ? item.fields[0].name
+          {item?.fields[0]?.name?.length! > 0
+            ? item?.fields[0]?.name
             : 'Unnamed Field'}
         </Button>
       </Card.Content>
@@ -199,7 +220,7 @@ const Item = ({
           icon="delete"
           mode="outlined"
           style={{borderRadius: 5}}
-          onPress={() => removeCategory(index)}>
+          onPress={() => removeCategory2(item?.id)}>
           Remove
         </Button>
       </Card.Actions>

@@ -50,8 +50,8 @@ export default function RootNav() {
     return (
       <Drawer.Navigator>
         <Drawer.Screen name="Dashboard" component={Dashboard} />
-        {category.get().length > 0 &&
-          category.get().map((item, index) => {
+        {category.get()?.length > 0 &&
+          category.get()?.map((item, index) => {
             return (
               <Drawer.Screen
                 key={item.id}

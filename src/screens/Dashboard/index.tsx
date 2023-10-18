@@ -38,59 +38,6 @@ export default function Dashboard() {
     });
   };
 
-  const data = [
-    {
-      id: '1691913265577-1471',
-      name: 'New Tes',
-      fields: [
-        {name: 'key1', value: '', type: 'Text'},
-        {name: 'key 2', value: '', type: 'Date'},
-        {name: 'key 3', value: '', type: 'Checkbox'},
-        {name: 'key 4', value: '', type: 'Number'},
-      ],
-      machines: [
-        {
-          name: '',
-          fields: [
-            {name: 'key1', value: 'test 1', type: 'Text'},
-            {
-              name: 'key 2',
-              value: '2023-08-15T07:55:24.362Z',
-              type: 'Date',
-            },
-            {name: 'key 3', value: true, type: 'Checkbox'},
-            {name: 'key 4', value: '500', type: 'Number'},
-          ],
-        },
-      ],
-    },
-    {
-      id: '1691913265577-1472',
-      name: 'New Te1',
-      fields: [
-        {name: 'key1', value: '', type: 'Text'},
-        {name: 'key 2', value: '', type: 'Date'},
-        {name: 'key 3', value: '', type: 'Checkbox'},
-        {name: 'key 4', value: '', type: 'Number'},
-      ],
-      machines: [
-        {
-          name: '',
-          fields: [
-            {name: 'key1', value: 'test 1', type: 'Text'},
-            {
-              name: 'key 2',
-              value: '2023-08-15T07:55:24.362Z',
-              type: 'Date',
-            },
-            {name: 'key 3', value: true, type: 'Checkbox'},
-            {name: 'key 4', value: '500', type: 'Number'},
-          ],
-        },
-      ],
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <FlatList
